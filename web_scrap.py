@@ -13,42 +13,80 @@
 import requests
 from bs4 import BeautifulSoup
 
-# Change to whatever your url is
-url = "http://www.waterville.com/ski-ride/snow-report.html"
+# 5 URLs to scrap for lift / trail data.
+# Order is: Waterville Valley, Cannon Mt, Bretton Woods, Loon Mt & Cranmore Mt
+urls = ["http://www.waterville.com/ski-ride/snow-report.html",
+        "http://cannonmt.com/trail-lift-report.html",
+        "http://brettonwoods.com/alpine_conditions/snow_conditions",
+        "http://www.loonmtn.com/explore/snow-conditions/trail-lift-report",
+        "http://www.cranmore.com/winter/snow-grooming-report"]
 
-# Get the page, then grab just the text and use BeautifulSoup to work some magic on it.
-page = requests.get(url)
-data = page.text
-soup = BeautifulSoup(data, "lxml")
+mountains = ["Waterville Valley", "Cannon Mt", "Bretton Woods",
+             "Loon Mt", "Cranmore Mt"]
 
-# Now we've got just the HTML and can do some fun stuff with BeautifulSoup.
-#print (soup)
+# Waterville Valley
+def waterville():
+  open_trails = []
+  closed_trails = []
 
-# Let's try and get just the data for the ski conditions.
+  #Get the page, then grab just the text and use BeautifulSoup to work some magic on it.
+  page = requests.get(urls[0])
+  data = page.text
+  soup = BeautifulSoup(data, "lxml")
 
-# THIS RETURNS EMPTY ARRAY ([])
-#ski_data = soup.find_all("div", class_="tabset_content")
+  # Get an entire div.
+  ski_data = soup.findAll('div', {'class' : 'tabset_content'})
 
-# THIS WORKS
-ski_data = soup.findAll('div', {'class' : 'tabset_content'})
+  # Let's get all open trails.
+  for each_div in soup.findAll('li', {'class' : 'open'}):
+    open_trails.append(each_div.text)
 
-# Testing. This should be all the lift / trail data we need to parse.
-#print (ski_data)
+  print ("*** Open lifts / trails: ***\n")
+  print (open_trails)
 
-# Let's get all open trails.
-#open_trails = soup.findAll('li', {'class' : 'open'})
-#print (open_trails)
+  # Also all closed trails.
+  for each_div in soup.findAll('li', {'class' : 'closed'}):
+    closed_trails.append(each_div.text)
 
-print ("*** Open lifts / trails: ***\n")
+  print ("\n\n*** Closed lifts / trails: ***\n")
+  print (closed_trails)
 
-for each_div in soup.findAll('li', {'class' : 'open'}):
-  print (each_div.text)
+  print ("\n")
 
-# Also all closed trails.
-# closed_trails = soup.findAll('li', {'class' : 'closed'})
-# print (closed_trails)
+# Cannon Mt
+def cannon():
+  print ("NOT DONE.\n")
 
-print ("\n\n*** Closed lifts / trails: ***\n")
+# Bretton Woods
+def bretton_woods():
+  print ("NOT DONE.\n")
 
-for each_div in soup.findAll('li', {'class' : 'closed'}):
-  print (each_div.text)
+# Loon Mt
+def loon():
+  print ("NOT DONE.\n")
+
+# Cranmore Mt
+def cranmore():
+  print ("NOT DONE.\n")
+
+
+
+# Main loop for data gathering
+for num in range(0, len(urls)):
+  print (mountains[num] + " lift / trail conditions")
+  print ("Current URL to check: " + urls[num] + "\n")
+
+  if (num == 0):
+    waterville()
+
+  if (num == 1):
+    cannon()
+
+  if (num == 2):
+    bretton_woods()
+
+  if (num == 3):
+    loon()
+
+  if (num == 4):
+    cranmore()
