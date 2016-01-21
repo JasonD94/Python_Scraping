@@ -4,6 +4,8 @@
 #   https://stackoverflow.com/questions/18966368/python-beautifulsoup-scrape-tables       #
 #   Also this page as well:                                                               #
 #   http://www.pythonforbeginners.com/python-on-the-web/web-scraping-with-beautifulsoup/  #
+#
+#   MIT LICENSED - DO WHATEVER YOU WANT WITH THIS CODE.
 ###########################################################################################
 
 # To setup urllib2 / bs4 (BeautifulSoup)
@@ -55,7 +57,32 @@ def waterville():
 
 # Cannon Mt
 def cannon():
-  print ("NOT DONE.\n")
+  open_trails = []
+  closed_trails = []
+
+  #Get the page, then grab just the text and use BeautifulSoup to work some magic on it.
+  page = requests.get(urls[0])
+  data = page.text
+  soup = BeautifulSoup(data, "lxml")
+
+  # Get an entire div.
+  ski_data = soup.findAll('div', {'class' : 'tabset_content'})
+
+  # Let's get all open trails.
+  for each_div in soup.findAll('li', {'class' : 'open'}):
+    open_trails.append(each_div.text)
+
+  print ("*** Open lifts / trails: ***\n")
+  print (open_trails)
+
+  # Also all closed trails.
+  for each_div in soup.findAll('li', {'class' : 'closed'}):
+    closed_trails.append(each_div.text)
+
+  print ("\n\n*** Closed lifts / trails: ***\n")
+  print (closed_trails)
+
+  print ("\n")
 
 # Bretton Woods
 def bretton_woods():
@@ -77,7 +104,7 @@ for num in range(0, len(urls)):
   print ("Current URL to check: " + urls[num] + "\n")
 
   if (num == 0):
-    waterville()
+    #waterville()
 
   if (num == 1):
     cannon()
